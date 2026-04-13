@@ -68,7 +68,8 @@ RUN wget -q \
     -O /tmp/lo.tar.gz \
     && tar -xzf /tmp/lo.tar.gz -C /tmp \
     && apt-get update \
-    && apt-get install -y /tmp/LibreOffice_${LO_VERSION}_Linux_x86-64_deb/DEBS/*.deb \
+    && dpkg -i /tmp/LibreOffice_${LO_VERSION}_Linux_x86-64_deb/DEBS/*.deb || true \
+    && apt-get install -f -y \
     && rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_* \
     && rm -rf /var/lib/apt/lists/*
 
