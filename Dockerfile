@@ -13,8 +13,11 @@ RUN $JAVA_HOME/bin/jlink \
     --compress=2 \
     --output /jre
 
-# ── Stage 2: 构建 jodconverter REST 应用 ───────────────────────────────────────
+# ── Stage 2: 构建 jodconverter 应用（rest 或 web）────────────────────────────
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble AS app-builder
+
+# rest = REST API only | web = Web UI + REST API
+ARG APP_VARIANT=rest
 
 RUN apt-get update && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/*
@@ -23,7 +26,13 @@ RUN git clone https://github.com/jodconverter/jodconverter-samples /src \
     && chmod +x /src/gradlew
 
 WORKDIR /src
-RUN ./gradlew --no-daemon -x test :samples:spring-boot-rest:build
+RUN if [ "${APP_VARIANT}" = "web" ]; then \
+        ./gradlew --no-daemon -x test :samples:spring-boot-webapp:build \
+        && cp samples/spring-boot-webapp/build/libs/*.war /app.war; \
+    else \
+        ./gradlew --no-daemon -x test :samples:spring-boot-rest:build \
+        && cp samples/spring-boot-rest/build/libs/*.war /app.war; \
+    fi
 
 # ── Stage 3: 最终运行镜像 ──────────────────────────────────────────────────────
 FROM debian:bookworm
@@ -49,8 +58,8 @@ ENV PATH="${JAVA_HOME}/bin:${LIBREOFFICE_HOME}/program:${PATH}"
 # 拷贝精简 JRE
 COPY --from=jre-builder /jre $JAVA_HOME
 
-# 拷贝 jodconverter REST war 包
-COPY --from=app-builder /src/samples/spring-boot-rest/build/libs/*.war /opt/app/app.war
+# 拷贝 jodconverter war 包
+COPY --from=app-builder /app.war /opt/app/app.war
 
 # 安装系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \

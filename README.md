@@ -28,7 +28,16 @@
 ```bash
 git clone https://github.com/stoneppy/jodconverter-latest.git
 cd jodconverter-latest
-docker compose up --build -d
+```
+
+选择部署版本：
+
+```bash
+# REST API 版（无界面）
+docker compose --profile rest up --build -d
+
+# Web UI 版（带图形界面）
+docker compose --profile web up --build -d
 ```
 
 启动后访问：`http://服务器IP:8080`
@@ -37,7 +46,9 @@ docker compose up --build -d
 
 ```bash
 git pull
-docker compose up --build -d
+docker compose --profile rest up --build -d
+# 或
+docker compose --profile web up --build -d
 ```
 
 ## 配置

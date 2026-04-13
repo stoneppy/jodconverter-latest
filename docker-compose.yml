@@ -1,12 +1,31 @@
 services:
-  jodconverter:
+  jodconverter-rest:
     build:
       context: .
       args:
+        APP_VARIANT: "rest"
         LO_VERSION: "26.2.2"
         LO_SHORT: "26.2"
         JAVA_VERSION: "21"
-    image: jodconverter-libreoffice:latest
+    profiles: ["rest"]
+    image: jodconverter-rest:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/application.properties:/etc/app/application.properties
+    mem_limit: 512m
+    restart: unless-stopped
+
+  jodconverter-web:
+    build:
+      context: .
+      args:
+        APP_VARIANT: "web"
+        LO_VERSION: "26.2.2"
+        LO_SHORT: "26.2"
+        JAVA_VERSION: "21"
+    profiles: ["web"]
+    image: jodconverter-web:latest
     ports:
       - "8080:8080"
     volumes:
