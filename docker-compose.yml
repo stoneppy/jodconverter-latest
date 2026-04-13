@@ -7,7 +7,7 @@ services:
         LO_VERSION: "26.2.2"
         LO_SHORT: "26.2"
         JAVA_VERSION: "21"
-    profiles: ["rest"]
+    profiles: ["rest", "all"]
     image: jodconverter-rest:latest
     ports:
       - "8080:8080"
@@ -24,10 +24,10 @@ services:
         LO_VERSION: "26.2.2"
         LO_SHORT: "26.2"
         JAVA_VERSION: "21"
-    profiles: ["web"]
+    profiles: ["web", "all"]
     image: jodconverter-web:latest
     ports:
-      - "8080:8080"
+      - "8081:8080"
     volumes:
       - ./config/application.properties:/etc/app/application.properties
     mem_limit: 512m

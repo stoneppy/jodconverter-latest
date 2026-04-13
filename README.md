@@ -33,11 +33,14 @@ cd jodconverter-latest
 选择部署版本：
 
 ```bash
-# REST API 版（无界面）
+# 仅 REST API（端口 8080）
 docker compose --profile rest up --build -d
 
-# Web UI 版（带图形界面）
+# 仅 Web UI（端口 8081）
 docker compose --profile web up --build -d
+
+# 两个同时运行
+docker compose --profile all up --build -d
 ```
 
 启动后访问：`http://服务器IP:8080`
