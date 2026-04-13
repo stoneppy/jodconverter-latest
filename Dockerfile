@@ -68,10 +68,12 @@ RUN wget -q \
     -O /tmp/lo.tar.gz \
     && tar -xzf /tmp/lo.tar.gz -C /tmp \
     && apt-get update \
-    && dpkg -i /tmp/LibreOffice_${LO_VERSION}_Linux_x86-64_deb/DEBS/*.deb || true \
-    && apt-get install -f -y \
+    && cd /tmp/LibreOffice_${LO_VERSION}_Linux_x86-64_deb/DEBS/ \
+    && apt-get install -y ./*.deb \
+    && cd / \
     && rm -rf /tmp/lo.tar.gz /tmp/LibreOffice_* \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && test -d ${LIBREOFFICE_HOME} || (echo "ERROR: LibreOffice not found at ${LIBREOFFICE_HOME}" && exit 1)
 
 # 创建用户和目录
 RUN groupadd ${NONPRIVGROUP} \
