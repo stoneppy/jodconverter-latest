@@ -26,13 +26,9 @@ RUN git clone https://github.com/jodconverter/jodconverter-samples /src \
     && chmod +x /src/gradlew
 
 WORKDIR /src
-RUN if [ "${APP_VARIANT}" = "web" ]; then \
-        ./gradlew --no-daemon -x test :samples:spring-boot-webapp:build \
-        && cp samples/spring-boot-webapp/build/libs/*.war /app.war; \
-    else \
-        ./gradlew --no-daemon -x test :samples:spring-boot-rest:build \
-        && cp samples/spring-boot-rest/build/libs/*.war /app.war; \
-    fi
+RUN MODULE=$([ "${APP_VARIANT}" = "web" ] && echo "spring-boot-webapp" || echo "spring-boot-rest") \
+    && ./gradlew --no-daemon -x test :samples:${MODULE}:build \
+    && find samples/${MODULE}/build/libs/ -maxdepth 1 \( -name "*.war" -o -name "*.jar" \) ! -name "*plain*" | head -1 | xargs -I{} cp {} /app.war
 
 # ── Stage 3: 最终运行镜像 ──────────────────────────────────────────────────────
 FROM debian:bookworm
