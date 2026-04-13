@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libx11-6 libxext6 libxrender1 libxrandr2 libxcursor1 \
     libdbus-1-3 libfontconfig1 libfreetype6 libsm6 libice6 \
     libpng16-16 libgl1 libxcb-shm0 libxcb-render0 \
-    procps gosu \
+    fontconfig procps gosu \
     && rm -rf /var/lib/apt/lists/*
 
 # 下载并安装 LibreOffice（官网 deb 包）
