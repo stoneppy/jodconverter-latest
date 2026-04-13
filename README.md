@@ -76,10 +76,6 @@ curl -X POST http://localhost:8080/api/converter/convert \
   -o output.pdf
 ```
 
-### Web UI
-
-直接访问 `http://服务器IP:8080` 使用图形界面上传转换。
-
 ## 环境变量
 
 | 变量 | 默认值 | 说明 |
